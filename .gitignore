@@ -4,3 +4,5 @@
 
 # Setuptools distribution folder.
 /dist/
+.idea/
+venv/

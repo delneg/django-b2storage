@@ -1,12 +1,15 @@
 import base64
 import json
 from urllib.request import Request, urlopen
+
 import datetime
 
 from django.conf import settings
 
+
 def decode(m):
     return m.decode('utf-8')
+
 
 def encode(m):
     return m.encode('utf-8')
@@ -20,14 +23,12 @@ class ConnectionInfo():
     APP_KEY = settings.B2_APPLICATION_KEY
     BUCKET_NAME = settings.B2_BUCKET_NAME
     BUCKET_ID = settings.B2_BUCKET_ID
-    _validDuration = datetime.timedelta(days=1) # duration of the authorization token
-
+    _validDuration = datetime.timedelta(days=1)  # duration of the authorization token
 
     def __init__(self):
-        self._auth_request_time = datetime.datetime.now() - 42*self._validDuration
+        self._auth_request_time = datetime.datetime.now() - 42 * self._validDuration
         self._auth_data = dict()
-        self.name_id_dict = dict() # To make get_file_id faster at the cost of memory
-
+        self.name_id_dict = dict()  # To make get_file_id faster at the cost of memory
 
     @property
     def auth_data(self):
@@ -38,14 +39,14 @@ class ConnectionInfo():
         if datetime.datetime.now() - self._auth_request_time >= self._validDuration:
             id_and_key = self.ACCOUNT_ID + ':' + self.APP_KEY
             basic_auth_string = 'Basic ' + decode(base64.b64encode(id_and_key.encode('utf-8')))
-            headers = {'Authorization' : basic_auth_string}
+            headers = {'Authorization': basic_auth_string}
             request = Request(
                 'https://api.backblaze.com/b2api/v1/b2_authorize_account',
-                headers = headers
+                headers=headers
             )
             response = urlopen(request)
-            self._auth_request_time = datetime.datetime.now() # reset time
-            self._auth_data = json.loads(decode(response.read()))
+            self._auth_request_time = datetime.datetime.now()  # reset time
+            self._auth_data = json.loads(response.read())
             response.close()
         return self._auth_data
 
@@ -73,8 +74,8 @@ class ConnectionInfo():
         """
         request = Request(
             '%s/b2api/v1/b2_get_upload_url' % self.api_url,
-            encode(json.dumps({ 'bucketId' : self.BUCKET_ID })),
-            headers = { 'Authorization': self.auth_token }
+            encode(json.dumps({'bucketId': self.BUCKET_ID})),
+            headers={'Authorization': self.auth_token}
         )
         response = urlopen(request)
         _upload_data = json.loads(decode(response.read()))
