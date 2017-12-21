@@ -39,6 +39,8 @@ class B2Storage(Storage):
             content_type = content.file.content_type
         else:
             content_type = mimetypes.guess_type(name)[0]
+        if not content_type:
+            content_type = 'application/octet-stream'
         headers = {
             'Authorization': quote(upload_data['authorizationToken'].encode('utf-8')),
             'X-Bz-File-Name': quote(name.encode('utf-8')),
