@@ -28,18 +28,8 @@ Then in your settings file, add the following:
     B2_BUCKET_NAME = 'your_bucket_name'
     B2_BUCKET_ID = 'your_bucket_id'
 
-| And That’s It!!!
 | You will now be able to refer to user uploaded files using:
 
 .. code:: sh
 
     object_with_file.file.url()
-
-Tutorial
---------
-
-To see this in action alongside with `Heroku`_, see my tutorial `here`_
-
-.. _Backblaze B2: https://www.backblaze.com/b2/cloud-storage.html
-.. _Heroku: https://www.heroku.com/
-.. _here: http://hb2-tutorial.getforge.io/
